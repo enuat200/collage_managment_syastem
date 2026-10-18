@@ -1,6 +1,9 @@
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 
 // Routes
 import authRoutes from "./routes/authRoutes.js";
@@ -89,6 +92,24 @@ app.use("/api/communication", communicationRoutes);
 app.use("/api/announcements", communicationRoutes);
 app.use("/api/reports", reportRoutes);
 app.use("/api/admin", adminRoutes);
+
+// Serve static client build if present (for single-host / monolithic deployments)
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const clientDistPath = path.resolve(__dirname, "../../client/dist");
+
+if (fs.existsSync(clientDistPath)) {
+  app.use(express.static(clientDistPath));
+  app.use((req, res, next) => {
+    if (req.method === "GET" && !req.path.startsWith("/api")) {
+      return res.sendFile(path.join(clientDistPath, "index.html"));
+    }
+    if (req.path.startsWith("/api")) {
+      return res.status(404).json({ message: `API route ${req.path} not found` });
+    }
+    next();
+  });
+}
 
 // Centralized error handler
 app.use((err, req, res, next) => {

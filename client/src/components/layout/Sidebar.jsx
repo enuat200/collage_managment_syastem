@@ -11,8 +11,10 @@ import {
   Library,
   Megaphone,
   ShieldCheck,
+  GraduationCap,
   X,
 } from 'lucide-react';
+import { COLLEGE_IMAGES } from '../../assets/collegeImages.js';
 
 export const NAV_ITEMS = [
   {
@@ -137,14 +139,24 @@ export const Sidebar = ({ activeTab, onSelectTab, isOpen, onClose }) => {
           })}
         </div>
 
-        {/* Footer info in sidebar */}
-        <div className="p-4 border-t border-slate-100 dark:border-slate-800/80">
-          <div className="rounded-xl bg-slate-50 dark:bg-slate-800/60 p-3 text-xs border border-slate-100 dark:border-slate-800">
-            <p className="font-semibold text-slate-800 dark:text-slate-200">UniManage CMS</p>
-            <p className="text-slate-400 text-[11px] mt-0.5">Academic Year 2026-2027</p>
-            <div className="mt-2 flex items-center gap-1.5 text-[10px] text-emerald-600 dark:text-emerald-400 font-medium">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              Connected to Neon Cloud DB
+        {/* Footer info in sidebar with campus photo */}
+        <div className="p-3 border-t border-slate-100 dark:border-slate-800/80">
+          <div className="relative rounded-xl overflow-hidden p-3.5 text-xs text-white shadow-sm border border-indigo-400/20 group">
+            <div
+              className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
+              style={{ backgroundImage: `url(${COLLEGE_IMAGES.campuses.clockTower})` }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-indigo-950/85 to-indigo-950/70" />
+            <div className="relative z-10">
+              <p className="font-bold text-white text-xs flex items-center gap-1.5">
+                <GraduationCap className="w-3.5 h-3.5 text-amber-300" />
+                UniManage University
+              </p>
+              <p className="text-slate-300 text-[10px] mt-0.5">Main Quad &bull; Term Fall 2026</p>
+              <div className="mt-2 flex items-center gap-1.5 text-[10px] text-emerald-300 font-semibold">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                Connected to Cloud DB
+              </div>
             </div>
           </div>
         </div>

@@ -15,7 +15,9 @@ import {
   Trash2,
   AlertCircle,
   MapPin,
+  Sparkles,
 } from 'lucide-react';
+import { COLLEGE_IMAGES, getDepartmentImage } from '../assets/collegeImages.js';
 
 export const Academics = () => {
   const { role } = useAuth();
@@ -173,76 +175,95 @@ export const Academics = () => {
 
   return (
     <div className="space-y-6">
-      {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Academics & Curriculum</h2>
-          <p className="text-sm text-slate-500 dark:text-slate-400">
-            Departments, Degree Programs, Courses, and Timetables
-          </p>
-        </div>
-
-        {canManage && (
-          <div className="flex items-center gap-2">
-            {activeTab === 'departments' && (
-              <Button icon={Plus} onClick={() => setModalType('dept')}>
-                Add Department
-              </Button>
-            )}
-            {activeTab === 'programs' && (
-              <Button
-                icon={Plus}
-                onClick={() => {
-                  setProgForm({
-                    name: '',
-                    code: '',
-                    departmentId: departments[0]?.id ? String(departments[0].id) : '',
-                    durationYears: 4,
-                    degreeType: 'BACHELOR',
-                  });
-                  setModalType('prog');
-                }}
-              >
-                Add Program
-              </Button>
-            )}
-            {activeTab === 'courses' && (
-              <Button
-                icon={Plus}
-                onClick={() => {
-                  setCourseForm({
-                    code: '',
-                    title: '',
-                    credits: 3,
-                    departmentId: departments[0]?.id ? String(departments[0].id) : '',
-                    description: '',
-                  });
-                  setModalType('course');
-                }}
-              >
-                Add Course
-              </Button>
-            )}
-            {activeTab === 'timetables' && (
-              <Button
-                icon={Plus}
-                onClick={() => {
-                  setSlotForm({
-                    courseId: courses[0]?.id ? String(courses[0].id) : '',
-                    day: 'Monday',
-                    startTime: '09:00',
-                    endTime: '10:30',
-                    room: 'Hall 101',
-                  });
-                  setConflictError('');
-                  setModalType('slot');
-                }}
-              >
-                Schedule Class Slot
-              </Button>
-            )}
+      {/* Visual Page Banner with Academic & Lecture Hall Imagery */}
+      <div className="relative rounded-2xl overflow-hidden shadow-md text-white border border-indigo-400/20">
+        <div
+          className="absolute inset-0 bg-cover bg-center transition-transform duration-700 hover:scale-105"
+          style={{ backgroundImage: `url(${COLLEGE_IMAGES.facilities.lectureHall})` }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-indigo-950/85 to-indigo-900/70" />
+        <div className="relative z-10 p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-2 mb-1.5">
+              <span className="text-[11px] font-bold tracking-wider uppercase px-2.5 py-0.5 rounded-full bg-amber-400/20 text-amber-300 border border-amber-400/30 flex items-center gap-1.5">
+                <Sparkles className="w-3 h-3" />
+                Curriculum & Degree Governance
+              </span>
+              <span className="text-xs text-indigo-200">University Catalog 2026–2027</span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+              Academic Schools & Course Catalog
+            </h2>
+            <p className="text-xs sm:text-sm text-indigo-100/90 mt-1 max-w-xl">
+              Organize collegiate faculties, configure degree accreditation pathways, and schedule conflict-free lecture timetables.
+            </p>
           </div>
-        )}
+
+          {canManage && (
+            <div className="flex flex-wrap items-center gap-2 shrink-0 self-start sm:self-auto">
+              {activeTab === 'departments' && (
+                <Button icon={Plus} onClick={() => setModalType('dept')} className="bg-white text-slate-900 hover:bg-slate-100 shadow-md font-bold">
+                  Add Department
+                </Button>
+              )}
+              {activeTab === 'programs' && (
+                <Button
+                  icon={Plus}
+                  onClick={() => {
+                    setProgForm({
+                      name: '',
+                      code: '',
+                      departmentId: departments[0]?.id ? String(departments[0].id) : '',
+                      durationYears: 4,
+                      degreeType: 'BACHELOR',
+                    });
+                    setModalType('prog');
+                  }}
+                  className="bg-white text-slate-900 hover:bg-slate-100 shadow-md font-bold"
+                >
+                  Add Program
+                </Button>
+              )}
+              {activeTab === 'courses' && (
+                <Button
+                  icon={Plus}
+                  onClick={() => {
+                    setCourseForm({
+                      code: '',
+                      title: '',
+                      credits: 3,
+                      departmentId: departments[0]?.id ? String(departments[0].id) : '',
+                      description: '',
+                    });
+                    setModalType('course');
+                  }}
+                  className="bg-white text-slate-900 hover:bg-slate-100 shadow-md font-bold"
+                >
+                  Add Course
+                </Button>
+              )}
+              {activeTab === 'timetables' && (
+                <Button
+                  icon={Plus}
+                  onClick={() => {
+                    setSlotForm({
+                      courseId: courses[0]?.id ? String(courses[0].id) : '',
+                      day: 'Monday',
+                      startTime: '09:00',
+                      endTime: '10:30',
+                      room: 'Hall 101',
+                    });
+                    setConflictError('');
+                    setModalType('slot');
+                  }}
+                  className="bg-white text-slate-900 hover:bg-slate-100 shadow-md font-bold"
+                >
+                  Schedule Class Slot
+                </Button>
+              )}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Tabs */}
@@ -314,28 +335,74 @@ export const Academics = () => {
       )}
 
       {activeTab === 'departments' && (
-        <Table
-          columns={[
-            {
-              header: 'Code',
-              key: 'code',
-              render: (code) => <span className="font-mono font-bold text-slate-800 dark:text-slate-200">{code}</span>,
-            },
-            {
-              header: 'Department Name',
-              key: 'name',
-              render: (name) => <span className="font-semibold text-indigo-600 dark:text-indigo-400">{name}</span>,
-            },
-            {
-              header: 'Description',
-              key: 'description',
-              render: (desc) => <span className="text-xs text-slate-500">{desc || 'Academic Department'}</span>,
-            },
-          ]}
-          data={departments}
-          loading={loading}
-          searchPlaceholder="Search departments..."
-        />
+        <div className="space-y-6">
+          {/* Visual Department Cards Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {departments.map((dept) => (
+              <div
+                key={dept.id}
+                className="group relative rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col justify-between"
+              >
+                <div className="h-32 relative overflow-hidden bg-slate-900">
+                  <div
+                    className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
+                    style={{ backgroundImage: `url(${getDepartmentImage(dept.code)})` }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/30 to-transparent" />
+                  <span className="absolute top-3 left-3 text-[11px] font-mono font-bold px-2 py-0.5 rounded bg-black/60 text-amber-300 backdrop-blur-xs border border-white/20">
+                    {dept.code}
+                  </span>
+                </div>
+                <div className="p-4 flex-1 flex flex-col justify-between">
+                  <div>
+                    <h3 className="font-bold text-slate-800 dark:text-slate-100 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition">
+                      {dept.name}
+                    </h3>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">
+                      {dept.description || 'Specialized university academic department offering undergraduate and graduate credentials.'}
+                    </p>
+                  </div>
+                  <div className="mt-3 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-slate-400">
+                    <span>Faculty & Facilities Active</span>
+                    <span className="text-indigo-600 dark:text-indigo-400 font-semibold flex items-center gap-1">
+                      Degree Pathways &rarr;
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <Table
+            columns={[
+              {
+                header: 'Department',
+                key: 'name',
+                render: (_, row) => (
+                  <div className="flex items-center gap-3">
+                    <img
+                      src={getDepartmentImage(row.code)}
+                      alt={row.name}
+                      className="w-12 h-10 rounded-lg object-cover ring-1 ring-slate-200 dark:ring-slate-700 shrink-0"
+                    />
+                    <div>
+                      <p className="font-semibold text-slate-800 dark:text-slate-200">{row.name}</p>
+                      <p className="text-xs text-indigo-600 dark:text-indigo-400 font-mono font-medium">{row.code}</p>
+                    </div>
+                  </div>
+                ),
+              },
+              {
+                header: 'Description',
+                key: 'description',
+                render: (desc) => <span className="text-xs text-slate-500">{desc || 'Academic Department'}</span>,
+              },
+            ]}
+            data={departments}
+            loading={loading}
+            searchPlaceholder="Search departments..."
+          />
+        </div>
       )}
 
       {activeTab === 'programs' && (

@@ -12,7 +12,9 @@ import {
   AlertCircle,
   Pin,
   Trash2,
+  Sparkles,
 } from 'lucide-react';
+import { COLLEGE_IMAGES } from '../assets/collegeImages.js';
 
 export const Announcements = () => {
   const { role } = useAuth();
@@ -76,20 +78,40 @@ export const Announcements = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Campus Announcements</h2>
-          <p className="text-sm text-slate-500 dark:text-slate-400">
-            University bulletins, event schedules, and critical academic notices
-          </p>
-        </div>
+      {/* Visual Page Banner with University Campus Life & Event Imagery */}
+      <div className="relative rounded-2xl overflow-hidden shadow-md text-white border border-indigo-400/20">
+        <div
+          className="absolute inset-0 bg-cover bg-center transition-transform duration-700 hover:scale-105"
+          style={{ backgroundImage: `url(${COLLEGE_IMAGES.events.symposium})` }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-indigo-950/85 to-indigo-900/70" />
+        <div className="relative z-10 p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-2 mb-1.5">
+              <span className="text-[11px] font-bold tracking-wider uppercase px-2.5 py-0.5 rounded-full bg-amber-400/20 text-amber-300 border border-amber-400/30 flex items-center gap-1.5">
+                <Sparkles className="w-3 h-3" />
+                University Communications
+              </span>
+              <span className="text-xs text-indigo-200">Campus Bulletins &amp; Key Dates</span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+              Campus Bulletins &amp; Announcements
+            </h2>
+            <p className="text-xs sm:text-sm text-indigo-100/90 mt-1 max-w-xl">
+              Official institutional notices, academic symposiums, examination guidelines, and student life activities.
+            </p>
+          </div>
 
-        {canPost && (
-          <Button icon={Plus} onClick={() => setCreateModal(true)}>
-            Publish Announcement
-          </Button>
-        )}
+          {canPost && (
+            <Button
+              icon={Plus}
+              onClick={() => setCreateModal(true)}
+              className="bg-white text-slate-900 hover:bg-slate-100 shadow-md font-bold shrink-0 self-start sm:self-auto"
+            >
+              Publish Announcement
+            </Button>
+          )}
+        </div>
       </div>
 
       {/* Announcements Grid */}
@@ -114,6 +136,26 @@ export const Announcements = () => {
                   : 'border-l-indigo-500 dark:border-l-indigo-400'
               }`}
             >
+              {/* Event Cover Thumbnail */}
+              <div className="h-28 -mt-6 -mx-6 mb-4 relative overflow-hidden bg-slate-900">
+                <div
+                  className="absolute inset-0 bg-cover bg-center transition-transform duration-500 hover:scale-105"
+                  style={{
+                    backgroundImage: `url(${
+                      item.priority === 'URGENT'
+                        ? COLLEGE_IMAGES.events.hackathon
+                        : item.priority === 'HIGH'
+                        ? COLLEGE_IMAGES.events.convocation
+                        : COLLEGE_IMAGES.events.symposium
+                    })`,
+                  }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent" />
+                <span className="absolute bottom-2 left-4 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-black/60 text-amber-300 backdrop-blur-xs border border-white/20">
+                  Campus Announcement &bull; {item.audience}
+                </span>
+              </div>
+
               <div className="flex items-start justify-between gap-2">
                 <div className="flex items-center gap-2">
                   <span

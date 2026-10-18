@@ -16,7 +16,9 @@ import {
   Briefcase,
   Award,
   Link,
+  Sparkles,
 } from 'lucide-react';
+import { COLLEGE_IMAGES, getFacultyAvatar } from '../assets/collegeImages.js';
 
 export const Faculty = () => {
   const { role } = useAuth();
@@ -153,12 +155,23 @@ export const Faculty = () => {
 
   const teacherColumns = [
     {
-      header: 'Faculty Member',
+      header: 'Faculty Scholar',
       key: 'user.name',
       render: (_, row) => (
-        <div>
-          <p className="font-semibold text-slate-800 dark:text-slate-100">{row.user?.name}</p>
-          <p className="text-xs text-slate-400 font-mono">ID: {row.employeeId}</p>
+        <div className="flex items-center gap-3">
+          <img
+            src={getFacultyAvatar(row.id || row.employeeId || row.user?.name)}
+            alt={row.user?.name || 'Faculty'}
+            className="w-10 h-10 rounded-full object-cover ring-2 ring-indigo-500/20 shrink-0 shadow-xs"
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = COLLEGE_IMAGES.facultyAvatars[0];
+            }}
+          />
+          <div>
+            <p className="font-semibold text-slate-800 dark:text-slate-100">{row.user?.name}</p>
+            <p className="text-xs text-slate-400 font-mono">ID: {row.employeeId}</p>
+          </div>
         </div>
       ),
     },
@@ -245,9 +258,20 @@ export const Faculty = () => {
       header: 'Staff Member',
       key: 'user.name',
       render: (_, row) => (
-        <div>
-          <p className="font-semibold text-slate-800 dark:text-slate-100">{row.user?.name}</p>
-          <p className="text-xs text-slate-400 font-mono">ID: {row.employeeId}</p>
+        <div className="flex items-center gap-3">
+          <img
+            src={getFacultyAvatar(row.id || row.employeeId || row.user?.name)}
+            alt={row.user?.name || 'Staff'}
+            className="w-10 h-10 rounded-full object-cover ring-2 ring-indigo-500/20 shrink-0 shadow-xs"
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = COLLEGE_IMAGES.facultyAvatars[0];
+            }}
+          />
+          <div>
+            <p className="font-semibold text-slate-800 dark:text-slate-100">{row.user?.name}</p>
+            <p className="text-xs text-slate-400 font-mono">ID: {row.employeeId}</p>
+          </div>
         </div>
       ),
     },
@@ -282,20 +306,40 @@ export const Faculty = () => {
 
   return (
     <div className="space-y-6">
-      {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Faculty & Staff</h2>
-          <p className="text-sm text-slate-500 dark:text-slate-400">
-            Professors, teaching faculty, and administrative personnel
-          </p>
-        </div>
+      {/* Visual Page Banner with University Faculty & Campus Imagery */}
+      <div className="relative rounded-2xl overflow-hidden shadow-md text-white border border-indigo-400/20">
+        <div
+          className="absolute inset-0 bg-cover bg-center transition-transform duration-700 hover:scale-105"
+          style={{ backgroundImage: `url(${COLLEGE_IMAGES.campuses.historicQuad})` }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-indigo-950/85 to-indigo-900/70" />
+        <div className="relative z-10 p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-2 mb-1.5">
+              <span className="text-[11px] font-bold tracking-wider uppercase px-2.5 py-0.5 rounded-full bg-amber-400/20 text-amber-300 border border-amber-400/30 flex items-center gap-1.5">
+                <Sparkles className="w-3 h-3" />
+                Academic Leadership
+              </span>
+              <span className="text-xs text-indigo-200">Professors, Scholars & Staff</span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+              Faculty & Departmental Staff
+            </h2>
+            <p className="text-xs sm:text-sm text-indigo-100/90 mt-1 max-w-xl">
+              Distinguished professors, research fellows, lab directors, and academic support staff steering higher education excellence.
+            </p>
+          </div>
 
-        {canManage && (
-          <Button icon={Plus} onClick={handleOpenCreateTeacher}>
-            Add Faculty Member
-          </Button>
-        )}
+          {canManage && (
+            <Button
+              icon={Plus}
+              onClick={handleOpenCreateTeacher}
+              className="bg-white text-slate-900 hover:bg-slate-100 shadow-md font-bold shrink-0 self-start sm:self-auto"
+            >
+              Add Faculty Member
+            </Button>
+          )}
+        </div>
       </div>
 
       {/* Tabs */}

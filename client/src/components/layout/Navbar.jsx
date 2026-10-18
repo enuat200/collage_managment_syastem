@@ -12,6 +12,7 @@ import {
   ChevronDown,
   Menu,
 } from 'lucide-react';
+import { getFacultyAvatar } from '../../assets/collegeImages.js';
 
 export const Navbar = ({ onToggleSidebar, notifications = [] }) => {
   const { user, role, quickLogin, logout } = useAuth();
@@ -145,10 +146,16 @@ export const Navbar = ({ onToggleSidebar, notifications = [] }) => {
           </div>
 
           {/* User Profile & Sign Out */}
-          <div className="flex items-center gap-2 pl-2 border-l border-slate-200 dark:border-slate-800">
-            <div className="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900/60 text-indigo-700 dark:text-indigo-300 font-semibold text-xs flex items-center justify-center">
-              {user?.name ? user.name[0].toUpperCase() : <User className="w-4 h-4" />}
-            </div>
+          <div className="flex items-center gap-2.5 pl-2 border-l border-slate-200 dark:border-slate-800">
+            <img
+              src={getFacultyAvatar(user?.id || user?.name || 0)}
+              alt={user?.name || 'User'}
+              className="w-8 h-8 rounded-full object-cover ring-2 ring-indigo-500/20 shrink-0 shadow-xs"
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&h=100&q=80';
+              }}
+            />
             <div className="hidden sm:block text-left">
               <p className="text-xs font-semibold text-slate-800 dark:text-slate-200 truncate max-w-[120px]">
                 {user?.name}

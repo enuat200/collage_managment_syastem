@@ -1,4 +1,12 @@
-const API_BASE = '/api';
+const rawBase = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE_URL || '/api';
+const getApiBase = (base) => {
+  const trimmed = base.replace(/\/+$/, '');
+  if (trimmed.startsWith('http') && !trimmed.endsWith('/api')) {
+    return `${trimmed}/api`;
+  }
+  return trimmed;
+};
+const API_BASE = getApiBase(rawBase);
 
 class ApiClient {
   constructor() {

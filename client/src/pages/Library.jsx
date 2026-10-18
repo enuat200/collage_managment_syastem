@@ -15,7 +15,9 @@ import {
   Search,
   AlertTriangle,
   Barcode,
+  Sparkles,
 } from 'lucide-react';
+import { COLLEGE_IMAGES } from '../assets/collegeImages.js';
 
 export const Library = () => {
   const { user, role } = useAuth();
@@ -154,20 +156,40 @@ export const Library = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Library & Media Center</h2>
-          <p className="text-sm text-slate-500 dark:text-slate-400">
-            Book repository catalog, physical inventory, and loan circulation
-          </p>
-        </div>
+      {/* Visual Page Banner with Grand University Library Imagery */}
+      <div className="relative rounded-2xl overflow-hidden shadow-md text-white border border-indigo-400/20">
+        <div
+          className="absolute inset-0 bg-cover bg-center transition-transform duration-700 hover:scale-105"
+          style={{ backgroundImage: `url(${COLLEGE_IMAGES.facilities.grandLibrary})` }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-indigo-950/85 to-indigo-900/70" />
+        <div className="relative z-10 p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-2 mb-1.5">
+              <span className="text-[11px] font-bold tracking-wider uppercase px-2.5 py-0.5 rounded-full bg-amber-400/20 text-amber-300 border border-amber-400/30 flex items-center gap-1.5">
+                <Sparkles className="w-3 h-3" />
+                Alexander Memorial Archives
+              </span>
+              <span className="text-xs text-indigo-200">50,000+ Physical Volumes &amp; e-Journals</span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+              Library &amp; Media Resource Center
+            </h2>
+            <p className="text-xs sm:text-sm text-indigo-100/90 mt-1 max-w-xl">
+              Search the central catalog, issue book copies, track active borrowing loans, and handle automated overdue fees.
+            </p>
+          </div>
 
-        {canManage && (
-          <Button icon={Plus} onClick={handleOpenAddBook}>
-            Add Book to Catalog
-          </Button>
-        )}
+          {canManage && (
+            <Button
+              icon={Plus}
+              onClick={handleOpenAddBook}
+              className="bg-white text-slate-900 hover:bg-slate-100 shadow-md font-bold shrink-0 self-start sm:self-auto"
+            >
+              Add Book to Catalog
+            </Button>
+          )}
+        </div>
       </div>
 
       {/* Stats */}
@@ -232,12 +254,23 @@ export const Library = () => {
               render: (isbn) => <span className="font-mono text-xs font-bold text-slate-600 dark:text-slate-400">{isbn}</span>,
             },
             {
-              header: 'Title & Author',
+              header: 'Book Title & Author',
               key: 'title',
               render: (_, row) => (
-                <div>
-                  <p className="font-semibold text-slate-800 dark:text-slate-200">{row.title}</p>
-                  <p className="text-xs text-slate-400">By {row.author} &bull; {row.publisher}</p>
+                <div className="flex items-center gap-3">
+                  <img
+                    src={COLLEGE_IMAGES.books[Math.abs(String(row.id || row.isbn).split('').reduce((acc, c) => acc + c.charCodeAt(0), 0)) % COLLEGE_IMAGES.books.length]}
+                    alt={row.title}
+                    className="w-10 h-14 object-cover rounded shadow-xs shrink-0 ring-1 ring-slate-200 dark:ring-slate-700"
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = COLLEGE_IMAGES.books[0];
+                    }}
+                  />
+                  <div>
+                    <p className="font-semibold text-slate-800 dark:text-slate-200">{row.title}</p>
+                    <p className="text-xs text-slate-400">By {row.author} &bull; {row.publisher}</p>
+                  </div>
                 </div>
               ),
             },

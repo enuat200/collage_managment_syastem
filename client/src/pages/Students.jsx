@@ -18,7 +18,9 @@ import {
   Phone,
   Calendar,
   BookOpen,
+  Sparkles,
 } from 'lucide-react';
+import { COLLEGE_IMAGES, getStudentAvatar } from '../assets/collegeImages.js';
 
 export const Students = ({ onViewTranscript }) => {
   const { role } = useAuth();
@@ -195,12 +197,23 @@ export const Students = ({ onViewTranscript }) => {
       render: (val) => <span className="font-mono font-semibold text-indigo-600 dark:text-indigo-400">{val}</span>,
     },
     {
-      header: 'Student Name',
+      header: 'Student Scholar',
       key: 'user.name',
       render: (_, row) => (
-        <div>
-          <p className="font-medium text-slate-800 dark:text-slate-100">{row.user?.name}</p>
-          <p className="text-xs text-slate-400">{row.user?.email}</p>
+        <div className="flex items-center gap-3">
+          <img
+            src={getStudentAvatar(row.id || row.rollNo || row.user?.name)}
+            alt={row.user?.name || 'Student'}
+            className="w-10 h-10 rounded-full object-cover ring-2 ring-indigo-500/20 shrink-0 shadow-xs"
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = COLLEGE_IMAGES.avatars[0];
+            }}
+          />
+          <div>
+            <p className="font-semibold text-slate-800 dark:text-slate-100">{row.user?.name}</p>
+            <p className="text-xs text-slate-400">{row.user?.email}</p>
+          </div>
         </div>
       ),
     },
@@ -265,19 +278,39 @@ export const Students = ({ onViewTranscript }) => {
 
   return (
     <div className="space-y-6">
-      {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Students Directory</h2>
-          <p className="text-sm text-slate-500 dark:text-slate-400">
-            Admissions, enrollments, and academic student profiles
-          </p>
+      {/* Visual Page Banner with University Student Imagery */}
+      <div className="relative rounded-2xl overflow-hidden shadow-md text-white border border-indigo-400/20">
+        <div
+          className="absolute inset-0 bg-cover bg-center transition-transform duration-700 hover:scale-105"
+          style={{ backgroundImage: `url(${COLLEGE_IMAGES.students.studyingTogether})` }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-indigo-950/85 to-indigo-900/70" />
+        <div className="relative z-10 p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-2 mb-1.5">
+              <span className="text-[11px] font-bold tracking-wider uppercase px-2.5 py-0.5 rounded-full bg-amber-400/20 text-amber-300 border border-amber-400/30 flex items-center gap-1.5">
+                <Sparkles className="w-3 h-3" />
+                Undergraduate & Postgraduate
+              </span>
+              <span className="text-xs text-indigo-200">Admissions & Records</span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+              Student Body & Enrollment Directory
+            </h2>
+            <p className="text-xs sm:text-sm text-indigo-100/90 mt-1 max-w-xl">
+              Track student cohorts across academic departments, monitor semester progression, and issue certified official transcripts.
+            </p>
+          </div>
+          {canManage && (
+            <Button
+              icon={UserPlus}
+              onClick={handleOpenCreate}
+              className="bg-white text-slate-900 hover:bg-slate-100 shadow-md font-bold shrink-0 self-start sm:self-auto"
+            >
+              Admit New Student
+            </Button>
+          )}
         </div>
-        {canManage && (
-          <Button icon={UserPlus} onClick={handleOpenCreate}>
-            Admit New Student
-          </Button>
-        )}
       </div>
 
       {/* Filter Toolbar */}
@@ -491,30 +524,41 @@ export const Students = ({ onViewTranscript }) => {
           <div className="space-y-6">
             {/* Header profile summary */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 gap-4">
-              <div>
-                <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100">
-                  {selectedStudent.user?.name}
-                </h3>
-                <p className="text-xs text-slate-400 font-mono mt-0.5">
-                  Roll No: {selectedStudent.rollNo} &bull; {selectedStudent.department?.name}
-                </p>
-                <div className="flex items-center gap-3 mt-2 text-xs text-slate-500">
-                  <span className="flex items-center gap-1">
-                    <Mail className="w-3.5 h-3.5" /> {selectedStudent.user?.email}
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <Phone className="w-3.5 h-3.5" /> {selectedStudent.user?.phone || 'N/A'}
-                  </span>
+              <div className="flex items-center gap-4">
+                <img
+                  src={getStudentAvatar(selectedStudent.id || selectedStudent.rollNo)}
+                  alt={selectedStudent.user?.name}
+                  className="w-16 h-16 rounded-2xl object-cover ring-2 ring-indigo-500/30 shadow-md shrink-0"
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = COLLEGE_IMAGES.avatars[0];
+                  }}
+                />
+                <div>
+                  <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100">
+                    {selectedStudent.user?.name}
+                  </h3>
+                  <p className="text-xs text-slate-400 font-mono mt-0.5">
+                    Roll No: {selectedStudent.rollNo} &bull; {selectedStudent.department?.name}
+                  </p>
+                  <div className="flex flex-wrap items-center gap-3 mt-2 text-xs text-slate-500">
+                    <span className="flex items-center gap-1">
+                      <Mail className="w-3.5 h-3.5" /> {selectedStudent.user?.email}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Phone className="w-3.5 h-3.5" /> {selectedStudent.user?.phone || 'N/A'}
+                    </span>
+                  </div>
                 </div>
               </div>
-              <div className="flex sm:flex-col items-center sm:items-end gap-2">
+              <div className="flex sm:flex-col items-center sm:items-end gap-2 shrink-0">
                 <StatusBadge status={selectedStudent.enrollmentStatus} />
                 <button
                   onClick={() => {
                     setDetailsModalOpen(false);
                     if (onViewTranscript) onViewTranscript(selectedStudent.id);
                   }}
-                  className="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold flex items-center gap-1.5 transition"
+                  className="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold flex items-center gap-1.5 transition shadow-xs"
                 >
                   <GraduationCap className="w-4 h-4" /> Academic Transcript
                 </button>
